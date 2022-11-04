@@ -44,7 +44,7 @@ box_pose.pose.position.z = 0.5
 box_pose.pose.orientation.w = 0
 
 giskard_wrapper.add_box(name=box_name,
-                        size=(2, 1, 1),
+                        size=(2, 1, 0.7),
                         pose=box_pose,
                         parent_link='map')
 
