@@ -45,8 +45,26 @@ def follow_human_right_hand():
     #  can calculate the difference for each subsequent point. And then giskard_wrapper.add_cmd() to giskard so 
     #  that the difference between those points is saved into giskard and let giskard calulate trajectory for pr2 hands.
     ori2 = Quaternion(0, 0, 0, 1)
-    response = ic.follow_human_right_hand(pose1, pose2, ori2)
+    response = ic.follow_human_right_hand()
     if response is not None:
-        return jsonify("successfully moved backward"), 200
+        return jsonify("successfully followed the trajectory"), 200
+    else:
+        return jsonify(response), 400
+
+
+@app.route("/reset")
+def reset():
+    response = ic.reset()
+    if response is not None:
+        return jsonify("successfully reset the environment"), 200
+    else:
+        return jsonify(response), 400
+
+
+@app.route("/readHandPosesFromJsonFile")
+def readHandPosesFromJsonFile():
+    response = ic.readHandPosesFromJsonFile()
+    if response is not None:
+        return jsonify("successfully reset the environment"), 200
     else:
         return jsonify(response), 400
