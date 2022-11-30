@@ -68,3 +68,14 @@ def readHandPosesFromJsonFile():
         return jsonify("successfully reset the environment"), 200
     else:
         return jsonify(response), 400
+
+
+@app.route("/perform_pouring")
+def perform_pouring():
+    response = ic.perform_pouring()
+    if response is not None:
+        return jsonify("successfully pouring performed"), 200
+    else:
+        return jsonify(response), 400
+    
+
