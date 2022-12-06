@@ -4,6 +4,7 @@ from flask import Flask, jsonify
 from flask_restful import Resource, Api, reqparse
 import pandas as pd
 from geometry_msgs.msg import Point, Quaternion
+import rospy
 import interactive_commands as ic
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
