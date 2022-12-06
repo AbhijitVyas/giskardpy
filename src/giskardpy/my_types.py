@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from enum import Enum, IntEnum
+from enum import IntEnum
 from typing import Union, Dict
-import genpy
 
-import casadi as ca
+import genpy
+from geometry_msgs.msg import PoseStamped, PointStamped, Vector3Stamped, QuaternionStamped
 
 
 class PrefixName:
@@ -73,7 +73,6 @@ class Derivatives(IntEnum):
 
 my_string = Union[str, PrefixName]
 goal_parameter = Union[my_string, float, bool, genpy.Message, dict, list, None]
-expr_symbol = Union[ca.SX, float]
-expr_matrix = ca.SX
 derivative_map = Dict[Derivatives, float]
 derivative_joint_map = Dict[Derivatives, Dict[my_string, float]]
+transformable_message = Union[PoseStamped, PointStamped, Vector3Stamped, QuaternionStamped]

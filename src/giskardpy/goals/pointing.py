@@ -4,9 +4,9 @@ from typing import Optional
 
 from geometry_msgs.msg import Vector3Stamped, PointStamped
 
-from giskardpy import casadi_wrapper as w
-from giskardpy.goals.goal import Goal, WEIGHT_BELOW_CA, WEIGHT_ABOVE_CA
 import giskardpy.utils.tfwrapper as tf
+from giskardpy import casadi_wrapper as w
+from giskardpy.goals.goal import Goal, WEIGHT_BELOW_CA
 from giskardpy.utils.logging import logwarn
 
 
@@ -19,8 +19,7 @@ class Pointing(Goal):
                  root_group: Optional[str] = None,
                  pointing_axis: Vector3Stamped = None,
                  max_velocity: float = 0.3,
-                 weight: float = WEIGHT_BELOW_CA,
-                 **kwargs):
+                 weight: float = WEIGHT_BELOW_CA):
         """
         Will orient pointing_axis at goal_point.
         :param tip_link: tip link of the kinematic chain.
@@ -32,7 +31,7 @@ class Pointing(Goal):
         :param max_velocity: rad/s
         :param weight:
         """
-        super().__init__(**kwargs)
+        super().__init__()
         self.weight = weight
         self.max_velocity = max_velocity
         self.root = self.world.get_link_name(root_link, root_group)
@@ -50,12 +49,12 @@ class Pointing(Goal):
 
     def make_constraints(self):
         root_T_tip = self.get_fk(self.root, self.tip)
-        root_P_goal_point = w.ros_msg_to_matrix(self.root_P_goal_point)
-        tip_V_pointing_axis = w.ros_msg_to_matrix(self.tip_V_pointing_axis)
+        root_P_goal_point = w.Point3(self.root_P_goal_point)
+        tip_V_pointing_axis = w.Vector3(self.tip_V_pointing_axis)
 
-        root_V_goal_axis = root_P_goal_point - w.position_of(root_T_tip)
-        root_V_goal_axis = w.scale(root_V_goal_axis, 1)
-        root_V_pointing_axis = w.dot(root_T_tip, tip_V_pointing_axis)
+        root_V_goal_axis = root_P_goal_point - root_T_tip.to_position()
+        root_V_goal_axis.scale(1)
+        root_V_pointing_axis = root_T_tip.dot(tip_V_pointing_axis)
 
         self.add_vector_goal_constraints(frame_V_current=root_V_pointing_axis,
                                          frame_V_goal=root_V_goal_axis,

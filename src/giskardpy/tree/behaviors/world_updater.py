@@ -3,7 +3,6 @@ from collections import defaultdict
 from copy import deepcopy
 from itertools import product
 from queue import Queue
-from time import time
 from xml.etree.ElementTree import ParseError
 
 import rospy
@@ -11,16 +10,16 @@ from py_trees import Status
 from py_trees.meta import running_is_success
 from tf2_py import TransformException
 from visualization_msgs.msg import MarkerArray, Marker
-import giskardpy.utils.tfwrapper as tf
+
 import giskardpy.casadi_wrapper as w
-import giskardpy.identifier as identifier
 from giskard_msgs.srv import UpdateWorld, UpdateWorldResponse, UpdateWorldRequest, GetGroupNamesResponse, \
     GetGroupNamesRequest, RegisterGroupRequest, RegisterGroupResponse, \
     GetGroupInfoResponse, GetGroupInfoRequest, DyeGroupResponse, GetGroupNames, GetGroupInfo, RegisterGroup, DyeGroup
-from giskardpy.my_types import PrefixName
+from giskardpy.data_types import JointStates
 from giskardpy.exceptions import CorruptShapeException, UnknownGroupException, \
     UnsupportedOptionException, DuplicateNameException, UnknownLinkException
 from giskardpy.model.world import SubWorldTree
+from giskardpy.my_types import PrefixName
 from giskardpy.tree.behaviors.plugin import GiskardBehavior
 from giskardpy.tree.behaviors.sync_configuration import SyncConfiguration
 from giskardpy.tree.behaviors.sync_tf_frames import SyncTfFrames
@@ -72,7 +71,7 @@ class WorldUpdater(GiskardBehavior):
     def __init__(self, name: str):
         self.added_plugin_names = defaultdict(list)
         super().__init__(name)
-        self.original_link_names = self.world.link_names
+        self.original_link_names = self.world.link_names_as_set
         self.service_in_use = Queue(maxsize=1)
         self.work_permit = Queue(maxsize=1)
         self.update_ticked = Queue(maxsize=1)
@@ -120,7 +119,7 @@ class WorldUpdater(GiskardBehavior):
         try:
             group = self.world.groups[req.group_name]  # type: SubWorldTree
             res.controlled_joints = [str(j.short_name) for j in group.controlled_joints]
-            res.links = list(sorted(str(x.short_name) for x in group.link_names))
+            res.links = list(sorted(str(x.short_name) for x in group.link_names_as_set))
             res.child_groups = list(sorted(str(x) for x in group.groups.keys()))
             # tree = self.god_map.unsafe_get_data(identifier.tree_manager)  # type: TreeManager
             # node_name = str(PrefixName(req.group_name, 'js'))
@@ -245,7 +244,7 @@ class WorldUpdater(GiskardBehavior):
         group = self.world.groups[req.group_name]
         joint_name = group.root_link.parent_joint_name
         pose = self.world.transform_pose(self.world._joints[joint_name].parent_link_name, req.pose).pose
-        pose = w.Matrix(msg_to_homogeneous_matrix(pose))
+        pose = w.Expression(msg_to_homogeneous_matrix(pose))
         self.world.update_joint_parent_T_child(joint_name, pose)
         # self.collision_scene.remove_black_list_entries(set(group.link_names_with_collisions))
         # self.collision_scene.update_collision_blacklist(
@@ -276,7 +275,10 @@ class WorldUpdater(GiskardBehavior):
         if name not in self.world.groups:
             raise UnknownGroupException(f'Can not remove unknown group: {name}.')
         self.collision_scene.remove_black_list_entries(set(self.world.groups[name].link_names_with_collisions))
+        old_free_variables = [x.name for x in self.world.groups[name].free_variables]
         self.world.delete_group(name)
+        for free_variable in old_free_variables:
+            del self.world.state[free_variable]
         self._remove_plugins_of_group(name)
         logging.loginfo(f'Deleted \'{name}\'.')
 
@@ -294,8 +296,11 @@ class WorldUpdater(GiskardBehavior):
         for group_name in list(self.added_plugin_names.keys()):
             self._remove_plugins_of_group(group_name)
         self.added_plugin_names = defaultdict(list)
-        self.world.state = tmp_state
+        # copy only state of joints that didn't get deleted
+        remaining_free_variables = [x.name for x in self.world.free_variables]
+        self.world.state = JointStates({k: v for k, v in tmp_state.items() if k in remaining_free_variables})
         self.world.notify_state_change()
+        self.clear_markers()
         logging.loginfo('Cleared world.')
 
     def clear_markers(self):

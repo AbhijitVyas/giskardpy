@@ -8,12 +8,9 @@ from typing import List
 
 from py_trees import Status
 
-import giskardpy.goals
 import giskardpy.identifier as identifier
 from giskard_msgs.msg import MoveCmd, CollisionEntry
-from giskardpy import casadi_wrapper as w
 from giskardpy.configs.data_types import CollisionCheckerLib
-from giskardpy.my_types import PrefixName
 from giskardpy.exceptions import UnknownConstraintException, InvalidGoalException, \
     ConstraintInitalizationException, GiskardException
 from giskardpy.goals.collision_avoidance import SelfCollisionAvoidance, ExternalCollisionAvoidance
@@ -28,7 +25,10 @@ class RosMsgToGoal(GetGoal):
     @profile
     def __init__(self, name, as_name):
         GetGoal.__init__(self, name, as_name)
-        self.allowed_constraint_types = get_all_classes_in_package(giskardpy.goals, Goal)
+        goal_package_paths = self.god_map.get_data(identifier.giskard).goal_package_paths
+        self.allowed_constraint_types = {}
+        for path in goal_package_paths:
+            self.allowed_constraint_types.update(get_all_classes_in_package(path, Goal))
         self.robot_names = self.collision_scene.robot_names
 
     @profile
@@ -82,8 +82,8 @@ class RosMsgToGoal(GetGoal):
             try:
                 parsed_json = json.loads(constraint.parameter_value_pair)
                 params = self.replace_jsons_with_ros_messages(parsed_json)
-                c: Goal = C(god_map=self.god_map, **params)
-                c.save_self_on_god_map()
+                c: Goal = C(**params)
+                c._save_self_on_god_map()
             except Exception as e:
                 traceback.print_exc()
                 doc_string = C.__init__.__doc__
@@ -162,7 +162,7 @@ class RosMsgToGoal(GetGoal):
                 robot_name = self.world.get_group_of_joint(joint_name).name
             except KeyError:
                 child_link = self.world._joints[joint_name].child_link_name
-                robot_name = self.world.get_group_name_containing_link(child_link)
+                robot_name = self.world._get_group_name_containing_link(child_link)
             child_links = self.world.get_directly_controlled_child_links_with_collisions(joint_name, fixed_joints)
             if child_links:
                 number_of_repeller = configs[robot_name].external_collision_avoidance[joint_name].number_of_repeller
@@ -173,14 +173,13 @@ class RosMsgToGoal(GetGoal):
                         soft_threshold = soft_threshold_override
                     else:
                         soft_threshold = configs[robot_name].external_collision_avoidance[joint_name].soft_threshold
-                    constraint = ExternalCollisionAvoidance(god_map=self.god_map,
-                                                            robot_name=robot_name,
+                    constraint = ExternalCollisionAvoidance(robot_name=robot_name,
                                                             link_name=child_link,
                                                             hard_threshold=hard_threshold,
                                                             soft_thresholds=soft_threshold,
                                                             idx=i,
                                                             num_repeller=number_of_repeller)
-                    constraint.save_self_on_god_map()
+                    constraint._save_self_on_god_map()
                     self.time_collector.collision_avoidance[-1] += 1
         loginfo(f'Adding {self.time_collector.collision_avoidance[-1]} external collision avoidance constraints.')
 
@@ -230,20 +229,19 @@ class RosMsgToGoal(GetGoal):
                                          config[link_b].soft_threshold)
                     number_of_repeller = min(config[link_a].number_of_repeller,
                                              config[link_b].number_of_repeller)
-                groups_a = self.world.get_group_name_containing_link(link_a)
-                groups_b = self.world.get_group_name_containing_link(link_b)
+                groups_a = self.world._get_group_name_containing_link(link_a)
+                groups_b = self.world._get_group_name_containing_link(link_b)
                 if groups_b == groups_a:
                     robot_name = groups_a
                 else:
                     raise Exception(f'Could not find group containing the link {link_a} and {link_b}.')
-                constraint = SelfCollisionAvoidance(god_map=self.god_map,
-                                                    link_a=link_a,
+                constraint = SelfCollisionAvoidance(link_a=link_a,
                                                     link_b=link_b,
                                                     robot_name=robot_name,
                                                     hard_threshold=hard_threshold,
                                                     soft_threshold=soft_threshold,
                                                     idx=i,
                                                     num_repeller=number_of_repeller)
-                constraint.save_self_on_god_map()
+                constraint._save_self_on_god_map()
                 self.time_collector.collision_avoidance[-1] += 1
         loginfo(f'Adding {self.time_collector.collision_avoidance[-1]} self collision avoidance constraints.')

@@ -4,9 +4,9 @@ from typing import Optional
 
 from geometry_msgs.msg import Vector3Stamped, PointStamped
 
+import giskardpy.utils.tfwrapper as tf
 from giskardpy import casadi_wrapper as w
 from giskardpy.goals.goal import Goal, WEIGHT_ABOVE_CA
-import giskardpy.utils.tfwrapper as tf
 
 
 class GraspBar(Goal):
@@ -21,8 +21,7 @@ class GraspBar(Goal):
                  tip_group: Optional[str] = None,
                  reference_linear_velocity: float = 0.1,
                  reference_angular_velocity: float = 0.5,
-                 weight: float = WEIGHT_ABOVE_CA,
-                 **kwargs):
+                 weight: float = WEIGHT_ABOVE_CA):
         """
         Like a CartesianPose but with more freedom.
         tip_link is allowed to be at any point along bar_axis, that is without bar_center +/- bar_length.
@@ -39,7 +38,7 @@ class GraspBar(Goal):
         :param reference_angular_velocity: rad/s
         :param weight: 
         """
-        super().__init__(**kwargs)
+        super().__init__()
         self.root = self.world.get_link_name(root_link, root_group)
         self.tip = self.world.get_link_name(tip_link, tip_group)
 
@@ -64,9 +63,9 @@ class GraspBar(Goal):
         return f'{s}/{self.root}/{self.tip}'
 
     def make_constraints(self):
-        root_V_bar_axis = w.ros_msg_to_matrix(self.bar_axis)
-        tip_V_tip_grasp_axis = w.ros_msg_to_matrix(self.tip_grasp_axis)
-        root_P_bar_center = w.ros_msg_to_matrix(self.bar_center)
+        root_V_bar_axis = w.Vector3(self.bar_axis)
+        tip_V_tip_grasp_axis = w.Vector3(self.tip_grasp_axis)
+        root_P_bar_center = w.Point3(self.bar_center)
 
         root_T_tip = self.get_fk(self.root, self.tip)
         root_V_tip_normal = w.dot(root_T_tip, tip_V_tip_grasp_axis)
@@ -76,14 +75,14 @@ class GraspBar(Goal):
                                          reference_velocity=self.reference_angular_velocity,
                                          weight=self.weight)
 
-        root_P_tip = w.position_of(self.get_fk(self.root, self.tip))
+        root_P_tip = self.get_fk(self.root, self.tip).to_position()
 
         root_P_line_start = root_P_bar_center + root_V_bar_axis * self.bar_length / 2
         root_P_line_end = root_P_bar_center - root_V_bar_axis * self.bar_length / 2
 
         dist, nearest = w.distance_point_to_line_segment(root_P_tip, root_P_line_start, root_P_line_end)
 
-        self.add_point_goal_constraints(frame_P_current=w.position_of(root_T_tip),
+        self.add_point_goal_constraints(frame_P_current=root_T_tip.to_position(),
                                         frame_P_goal=nearest,
                                         reference_velocity=self.reference_linear_velocity,
                                         weight=self.weight)

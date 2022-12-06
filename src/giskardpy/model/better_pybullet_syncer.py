@@ -6,7 +6,6 @@ from betterpybullet import ContactPoint
 from geometry_msgs.msg import PoseStamped, Quaternion
 from sortedcontainers import SortedDict
 
-from giskardpy.data_types import BiDict
 from giskardpy.model.bpb_wrapper import create_cube_shape, create_object, create_sphere_shape, create_cylinder_shape, \
     load_convex_mesh_shape
 from giskardpy.model.collision_world_syncer import CollisionWorldSynchronizer, Collision, Collisions
@@ -95,11 +94,6 @@ class BetterPyBulletSyncer(CollisionWorldSynchronizer):
                 for p in contact.points:  # type: ContactPoint
                     map_P_a = map_T_a.dot(p.point_a.reshape(4))
                     map_P_b = map_T_b.dot(p.point_b.reshape(4))
-                    groups_b = self.world.get_group_names_containing_link(link_b)
-                    if len(groups_b) == 1:
-                        body_b = groups_b.pop()
-                    else:
-                        body_b = ' '
                     c = Collision(link_a=link_a,
                                   link_b=link_b,
                                   contact_distance=p.distance,

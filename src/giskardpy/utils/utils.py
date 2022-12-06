@@ -1,7 +1,5 @@
 from __future__ import division
 
-import roslaunch
-from genpy import Message
 import errno
 import inspect
 import json
@@ -11,15 +9,20 @@ import sys
 import traceback
 from collections import OrderedDict
 from contextlib import contextmanager
+from copy import deepcopy
 from functools import wraps
 from itertools import product
 from multiprocessing import Lock
+from typing import Type, Optional, Dict
+
 import matplotlib.colors as mcolors
 import numpy as np
 import pylab as plt
+import roslaunch
 import rospkg
 import rospy
 import trimesh
+from genpy import Message
 from geometry_msgs.msg import PointStamped, Point, Vector3Stamped, Vector3, Pose, PoseStamped, QuaternionStamped, \
     Quaternion
 from py_trees import Status, Blackboard
@@ -69,12 +72,13 @@ class NullContextManager(object):
         pass
 
 
-def get_all_classes_in_package(package, parent_class=None):
+def get_all_classes_in_package(package_name: str, parent_class: Optional[Type] = None) -> Dict[str, Type]:
     classes = {}
+    package = __import__(package_name, fromlist="dummy")
     for importer, modname, ispkg in pkgutil.iter_modules(package.__path__):
-        module = __import__('{}.{}'.format(package.__name__, modname), fromlist="dummy")
+        module = __import__(f'{package.__name__}.{modname}', fromlist="dummy")
         for name2, value2 in inspect.getmembers(module, inspect.isclass):
-            if parent_class is None or issubclass(value2, parent_class):
+            if parent_class is None or issubclass(value2, parent_class) and package_name in str(value2):
                 classes[name2] = value2
     return classes
 
@@ -451,6 +455,24 @@ def memoize(function):
         key = (args, frozenset(kwargs.items()))
         try:
             return memo[key]
+        except KeyError:
+            rv = function(*args, **kwargs)
+            memo[key] = rv
+            return rv
+
+    return wrapper
+
+
+def copy_memoize(function):
+    memo = function.memo = {}
+
+    @wraps(function)
+    def wrapper(*args, **kwargs):
+        # key = cPickle.dumps((args, kwargs))
+        # key = pickle.dumps((args, sorted(kwargs.items()), -1))
+        key = (args, frozenset(kwargs.items()))
+        try:
+            return deepcopy(memo[key])
         except KeyError:
             rv = function(*args, **kwargs)
             memo[key] = rv

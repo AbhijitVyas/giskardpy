@@ -1,7 +1,7 @@
 from collections import defaultdict
 from itertools import product, combinations_with_replacement, combinations
 from time import time
-from typing import List, Dict, Tuple, Optional, Set
+from typing import List, Dict, Optional
 
 import numpy as np
 from sortedcontainers import SortedKeyList
@@ -12,7 +12,6 @@ from giskardpy.configs.data_types import CollisionAvoidanceConfig
 from giskardpy.data_types import JointStates
 from giskardpy.exceptions import UnknownGroupException
 from giskardpy.god_map import GodMap
-from giskardpy.model.links import Link
 from giskardpy.model.world import SubWorldTree
 from giskardpy.model.world import WorldTree
 from giskardpy.my_types import my_string
@@ -100,7 +99,7 @@ class Collisions:
     def get_robot_from_self_collision(self, collision):
         link_a, link_b = collision.link_a, collision.link_b
         for robot in self.collision_scene.robots:
-            if link_a in robot.link_names and link_b in robot.link_names:
+            if link_a in robot.link_names_as_set and link_b in robot.link_names_as_set:
                 return robot
 
     @profile
@@ -336,7 +335,8 @@ class CollisionWorldSynchronizer:
                         or link_b in self.ignored_self_collion_pairs \
                         or (link_a, link_b) in self.ignored_self_collion_pairs \
                         or (link_b, link_a) in self.ignored_self_collion_pairs \
-                        or group.are_linked(link_a, link_b, non_controlled=non_controlled, exception=self.fixed_joints) \
+                        or group.are_linked(link_a, link_b, do_not_ignore_non_controlled_joints=non_controlled,
+                                            joints_to_be_assumed_fixed=self.fixed_joints) \
                         or (not group.is_link_controlled(link_a) and not group.is_link_controlled(link_b)):
                     self.add_black_list_entry(*link_combination)
             except Exception as e:
@@ -526,7 +526,10 @@ class CollisionWorldSynchronizer:
                             del min_allowed_distance[r_key]
                     elif self.is_avoid_collision(collision_entry):
                         if key not in self.black_list:
-                            min_allowed_distance[key] = max(min_dist[key[0]], collision_entry.distance)
+                            if collision_entry.distance == -1:
+                                min_allowed_distance[key] = min_dist[key[0]]
+                            else:
+                                min_allowed_distance[key] = collision_entry.distance
                     else:
                         raise AttributeError(f'Invalid collision entry type: {collision_entry.type}')
         return min_allowed_distance

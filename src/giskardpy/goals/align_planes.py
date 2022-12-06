@@ -2,9 +2,9 @@ from typing import Optional
 
 from geometry_msgs.msg import Vector3Stamped
 
-from giskardpy.goals.goal import Goal, WEIGHT_ABOVE_CA
-from giskardpy import casadi_wrapper as w
 import giskardpy.utils.tfwrapper as tf
+from giskardpy import casadi_wrapper as w
+from giskardpy.goals.goal import Goal, WEIGHT_ABOVE_CA
 from giskardpy.utils.logging import logwarn
 
 
@@ -30,7 +30,7 @@ class AlignPlanes(Goal):
         :param max_angular_velocity: rad/s
         :param weight:
         """
-        super().__init__(**kwargs)
+        super().__init__()
         if 'root_normal' in kwargs:
             logwarn('Deprecated warning: use goal_normal instead of root_normal')
             goal_normal = kwargs['root_normal']
@@ -53,10 +53,10 @@ class AlignPlanes(Goal):
                f'_Z:{self.tip_V_tip_normal.vector.z}'
 
     def make_constraints(self):
-        tip_V_tip_normal = w.ros_msg_to_matrix(self.tip_V_tip_normal)
-        root_R_tip = w.rotation_of(self.get_fk(self.root, self.tip))
-        root_V_tip_normal = w.dot(root_R_tip, tip_V_tip_normal)
-        root_V_root_normal = w.ros_msg_to_matrix(self.root_V_root_normal)
+        tip_V_tip_normal = w.Vector3(self.tip_V_tip_normal)
+        root_R_tip = self.get_fk(self.root, self.tip).to_rotation()
+        root_V_tip_normal = root_R_tip.dot(tip_V_tip_normal)
+        root_V_root_normal = w.Vector3(self.root_V_root_normal)
         self.add_vector_goal_constraints(frame_V_current=root_V_tip_normal,
                                          frame_V_goal=root_V_root_normal,
                                          reference_velocity=self.max_velocity,
