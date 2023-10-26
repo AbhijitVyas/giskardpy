@@ -4,6 +4,7 @@ from geometry_msgs.msg import PoseStamped, Point, Quaternion, Vector3Stamped, Po
 from giskardpy.python_interface import GiskardWrapper
 from tf.transformations import quaternion_about_axis
 import numpy as np
+from numpy import pi
 import json
 
 # init ros node
@@ -41,13 +42,15 @@ start_joint_state = {'r_elbow_flex_joint': -1.29610152504,
                      'head_pan_joint': 0,
                      'head_tilt_joint': 0}
 
+ 
+
 
 def reset():
     # Remove everything but the robot.
     giskard_wrapper.clear_world()
     base_goal = PoseStamped()
     base_goal.header.frame_id = 'map'
-    base_goal.pose.position = Point(0, 0, 0)
+    base_goal.pose.position = Point(3, 3, 0)
     base_goal.pose.orientation = Quaternion(0, 0, 0, 1)
     # Setting the Cartesian goal.
     # Choosing map as root_link will allow Giskard to drive with the pr2.
@@ -71,6 +74,7 @@ def move(pose):
     base_goal.pose.position = pose
     rospy.loginfo('Setting Cartesian goal.')
     giskard_wrapper.set_cart_goal(root_link='map', tip_link='base_footprint', goal_pose=base_goal)
+    #giskard_wrapper.add_urdf()
     # Turn off collision avoidance to make sure that the robot can recover from any state.
     giskard_wrapper.allow_all_collisions()
     return giskard_wrapper.plan_and_execute()
@@ -92,6 +96,45 @@ def move_forward():
     giskard_wrapper.allow_all_collisions()
     return giskard_wrapper.plan_and_execute()
 
+# Method prompts agent to move head of PR2 to left side.
+# call this method from commandline with following command:
+# python3 -c 'from interactive_commands import *; move_head_left()'
+def move_head_left():
+    rospy.loginfo('Move PR2 head left in -y direction.')
+    base_goal = PoseStamped()
+    # it is very important to use goal.header.frame_id as base_footprint 
+    # so that the movements will be relative to the current base positions
+    base_goal.header.frame_id = 'head_mount_kinect_rgb_link'
+    base_goal.pose.position.y -= 0.5
+    rospy.loginfo('Setting Cartesian goal.')
+    giskard_wrapper.set_cart_goal(root_link='base_footprint', tip_link='head_mount_kinect_rgb_link', goal_pose=base_goal)
+    # Turn off collision avoidance to make sure that the robot can recover from any state.
+    giskard_wrapper.allow_all_collisions()
+    return giskard_wrapper.plan_and_execute()
+
+# Method prompts agent to move head of PR2 to right side.
+# call this method from commandline with following command:
+# python3 -c 'from interactive_commands import *; move_head_right()'
+def move_head_right():
+    rospy.loginfo('Move PR2 head left in +y direction.')
+    base_goal = PoseStamped()
+    # it is very important to use goal.header.frame_id as base_footprint 
+    # so that the movements will be relative to the current base positions
+    base_goal.header.frame_id = 'head_mount_kinect_rgb_link'
+    base_goal.pose.position.y += 0.5
+    
+    r_goal = PoseStamped()
+    r_goal.header.frame_id = 'head_mount_kinect_rgb_link'
+    r_goal.pose.orientation = Quaternion(*quaternion_about_axis(pi, [1, 0, 0]))
+    
+    # zero_pose.set_cart_goal(r_goal, zero_pose.r_tip)
+    # zero_pose.plan_and_execute()
+    
+    rospy.loginfo('Setting Cartesian goal.')
+    giskard_wrapper.set_cart_goal(root_link='base_footprint', tip_link='head_mount_kinect_rgb_link', goal_pose=base_goal)
+    # Turn off collision avoidance to make sure that the robot can recover from any state.
+    giskard_wrapper.allow_all_collisions()
+    return giskard_wrapper.plan_and_execute()
 
 # Method prompts agent to move to given pose.
 # call this method from commandline with following command:
@@ -441,3 +484,50 @@ def perform_pouring():
     return giskard_wrapper.plan_and_execute()
 
 
+def perform_pouring_in_apartment():
+    cup_size = (0.1, 0.1, 0.2)
+    cup_pose_point = Point(3.3, 3.7, 0.8)
+    pr2_approach_pose_point = Point(2.3, 2, 0.8)
+    pr2_pickup_pose_point = Point(2.3, 2, 1)
+
+    # init ros node
+    rospy.init_node('test')
+
+    rospy.loginfo('Instantiating Giskard wrapper.')
+    giskard_wrapper = GiskardWrapper()
+
+    # it is very important to use goal.header.frame_id as r_gripper_tool_frame 
+    # so that the movements will be relative to the current base positions
+    base_goal = PoseStamped()
+    base_goal.header.frame_id = 'r_gripper_tool_frame'
+    base_goal.pose.position.z = +0.3
+    rospy.loginfo('Setting Cartesian goal.')
+    giskard_wrapper.set_cart_goal(root_link='base_footprint', tip_link='r_gripper_tool_frame', goal_pose=base_goal)
+
+    base_goal.header.frame_id = 'l_gripper_tool_frame'
+    base_goal.pose.position.z = +0.3
+    rospy.loginfo('Setting Cartesian goal.')
+    giskard_wrapper.set_cart_goal(root_link='base_footprint', tip_link='l_gripper_tool_frame', goal_pose=base_goal)
+    # Turn off collision avoidance to make sure that the robot can recover from any state.
+    giskard_wrapper.allow_all_collisions()
+    giskard_wrapper.plan_and_execute()
+    
+    # Move PR2 toward the box/table where human was standing or the object is needed to be grasped
+    rospy.loginfo('Sending human position as a Cartesian goal for the base.')
+    base_goal = PoseStamped()
+    base_goal.header.frame_id = 'map'
+    base_goal.pose.position.x = 4.0
+    base_goal.pose.position.y = 3.5
+    base_goal.pose.orientation = Quaternion(*quaternion_about_axis(np.pi, [0, 0, 1]))
+
+    # Setting the Cartesian goal.
+    # Choosing map as root_link will allow Giskard to drive with the pr2.
+    giskard_wrapper.set_cart_goal(root_link='map', tip_link='base_footprint', goal_pose=base_goal)
+
+    # Turn off collision avoidance to make sure that the robot can recover from any state.
+    giskard_wrapper.allow_all_collisions()
+    giskard_wrapper.plan_and_execute()
+
+    rospy.loginfo('Move right hand upward in +z direction.')
+    base_goal = PoseStamped()
+    

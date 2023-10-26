@@ -78,5 +78,63 @@ def perform_pouring():
         return jsonify("successfully pouring performed"), 200
     else:
         return jsonify(response), 400
+
+
+@app.route("/perform_pouring_in_apartment")
+def perform_pouring_in_apartment():
+    response = ic.perform_pouring_in_apartment()
+    if response is not None:
+        return jsonify("successfully pouring performed in a apartment"), 200
+    else:
+        return jsonify(response), 400
     
 
+@app.route("/move_head_left")
+def move_head_left():
+    response = ic.move_head_left()
+    if response is not None:
+        return jsonify("successfully moving head performed"), 200
+    else:
+        return jsonify(response), 400
+
+@app.route("/move_head_right")
+def move_head_right():
+    response = ic.move_head_right()
+    if response is not None:
+        return jsonify("successfully moving head performed"), 200
+    else:
+        return jsonify(response), 400
+    
+# Not working at the moment because giskard throws an error that the trajectory took too much time to execute
+@app.route("/raise_right_hand")
+def raise_right_hand():
+    response = ic.raise_right_hand()
+    if response is not None:
+        return jsonify("successfully raising right hand performed"), 200
+    else:
+        return jsonify(response), 400
+
+@app.route("/raise_left_hand")
+def raise_left_hand():
+    response = ic.raise_left_hand()
+    if response is not None:
+        return jsonify("successfully raising left hand performed"), 200
+    else:
+        return jsonify(response), 400
+    
+
+@app.route("/move_right")
+def move_right():
+    response = ic.move_right()
+    if response is not None:
+        return jsonify("successfully moving to right performed"), 200
+    else:
+        return jsonify(response), 400
+
+@app.route("/move_left")
+def move_left():
+    response = ic.move_left()
+    if response is not None:
+        return jsonify("successfully moving to left performed"), 200
+    else:
+        return jsonify(response), 400

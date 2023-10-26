@@ -1,7 +1,7 @@
 <launch>
 
   <include file="$(find pr2_description)/robots/upload_pr2.launch"/>
-  <!--include ns="kitchen" file="$(find pouring_apartment_neem)/launch/rviz_launch_map_kitchen_new.launch"/-->
+  <include ns="kitchen" file="$(find pouring_apartment_neem)/launch/rviz_launch_map_kitchen_new.launch"/>
 
   <node pkg="giskardpy" type="giskard.py" name="giskard" output="screen">
     <param name="config" value="PR2_StandAlone"/>
