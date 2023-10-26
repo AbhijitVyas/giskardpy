@@ -1,19 +1,168 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="98374812-de4a-457b-ac91-ac513e4c094c" name="Changes" comment="" />
+    <list default="true" id="98374812-de4a-457b-ac91-ac513e4c094c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.github/workflows/build_dependencies.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/workflows/ci_standalone.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/workflows/reusable_robot_ci.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/launch/giskardpy_tracy.launch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/launch/giskardpy_tracy_real.launch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/goals/goals_tests.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_casadi.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_clarabel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_cvxopt.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_cvxpy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_mosek.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_osqp.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_qp_solvers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_qpalm.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_qpswift.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_quadprog.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_scs.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_super_scs.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/debug_marker_publisher.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/evaluate_debug_expressions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/giskardpy/utils/singleton.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/main_hsr.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/main_pr2.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/main_tiago.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/main_unit_tests.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/main_unit_tests.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dependencies.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/launch/giskardpy_boxy_standalone.launch" beforeDir="false" afterPath="$PROJECT_DIR$/launch/giskardpy_boxy_standalone.launch" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/launch/giskardpy_donbot_standalone.launch" beforeDir="false" afterPath="$PROJECT_DIR$/launch/giskardpy_donbot_standalone.launch" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/package.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rosinstall/noetic.rosinstall" beforeDir="false" afterPath="$PROJECT_DIR$/rosinstall/noetic.rosinstall" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/giskard_pr2_standalone_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/giskard_pr2_standalone_example.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/casadi_wrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/casadi_wrapper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/casadi_wrapper.pyi" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/casadi_wrapper.pyi" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/configs/boxy.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/configs/boxy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/configs/data_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/configs/data_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/configs/default_giskard.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/configs/default_giskard.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/configs/donbot.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/configs/donbot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/configs/hsr.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/configs/hsr.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/configs/pr2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/configs/pr2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/configs/tiago.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/configs/tiago.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/configs/tracebot.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/configs/tracebot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/data_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/data_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/goals/align_planes.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/goals/align_planes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/goals/base_traj_follower.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/goals/base_traj_follower.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/goals/cartesian_goals.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/goals/cartesian_goals.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/goals/collision_avoidance.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/goals/collision_avoidance.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/goals/diff_drive_goals.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/goals/diff_drive_goals.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/goals/goal.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/goals/goal.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/goals/grasp_bar.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/goals/grasp_bar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/goals/joint_goals.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/goals/joint_goals.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/goals/open_close.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/goals/open_close.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/goals/pointing.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/goals/pointing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/goals/set_prediction_horizon.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/goals/set_prediction_horizon.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/god_map.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/god_map.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/identifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/identifier.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/model/better_pybullet_syncer.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/model/better_pybullet_syncer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/model/collision_world_syncer.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/model/collision_world_syncer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/model/joints.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/model/joints.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/model/links.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/model/links.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/model/pybullet_syncer.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/model/pybullet_syncer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/model/trajectory.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/model/trajectory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/model/world.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/model/world.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/my_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/my_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/python_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/python_interface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/qp/free_variable.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/qp/free_variable.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/qp/qp_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_gurobi.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_gurobi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_qpoases.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/qp/qp_solver_qpoases.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/DebugTFPublisher.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/cleanup.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/cleanup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/goal_reached.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/goal_reached.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/init_qp_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/init_qp_controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/instantaneous_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/instantaneous_controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/instantaneous_controller_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/instantaneous_controller_base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/kinematic_sim.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/kinematic_sim.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/log_debug_expressions.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/log_debug_expressions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/loop_detector.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/loop_detector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/plot_debug_expressions.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/plot_debug_expressions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/plugin.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/plugin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/publish_debug_expressions.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/publish_debug_expressions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/real_kinematic_sim.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/real_kinematic_sim.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/ros_msg_to_goal.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/ros_msg_to_goal.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/send_trajectory.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/send_trajectory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/send_trajectory_omni_drive_realtime.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/send_trajectory_omni_drive_realtime.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/set_error_code.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/set_error_code.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/sync_configuration2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/sync_configuration2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/sync_odometry.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/sync_odometry.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/sync_tf_frames.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/sync_tf_frames.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/tf_publisher.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/tf_publisher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/visualization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/world_updater.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/behaviors/world_updater.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/composites/better_parallel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/composites/better_parallel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/tree/garden.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/tree/garden.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/utils/dependency_checking.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/utils/dependency_checking.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/utils/logging.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/utils/logging.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/utils/tfwrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/utils/tfwrapper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/utils/time_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/utils/time_collector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/giskardpy/utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/giskardpy/utils/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/conftest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_cas_wrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_cas_wrapper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_god_map.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_god_map.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_integration_donbot.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_integration_donbot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_integration_hsr.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_integration_hsr.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_integration_pr2.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_integration_pr2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_integration_pr22.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_integration_pr22.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_integration_pr2_and_donbot.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_integration_pr2_and_donbot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_integration_tiago_stand_alone.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_integration_tiago_stand_alone.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_integration_tracebot.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_integration_tracebot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/utils_for_tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/utils_for_tests.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
+  <component name="ProjectId" id="2XIkqsJsyUNMHMOqmdDltqtHDbB" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "last_opened_file_path": "/home/avyas/giskardpy_ws"
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/home/avyas/giskardpy_ws/src/giskardpy",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="98374812-de4a-457b-ac91-ac513e4c094c" name="Changes" comment="" />
+      <created>1698324174456</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1698324174456</updated>
+      <workItem from="1698324175465" duration="606000" />
+    </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

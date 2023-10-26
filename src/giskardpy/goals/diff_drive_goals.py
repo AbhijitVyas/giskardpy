@@ -15,7 +15,7 @@ class DiffDriveTangentialToPoint(Goal):
                  group_name: Optional[str] = None,
                  reference_velocity: float = 0.5, weight: bool = WEIGHT_ABOVE_CA, drive: bool = False):
         super().__init__()
-        self.tip = self.world.get_link_name('base_footprint', group_name)
+        self.tip = self.world.search_for_link_name('base_footprint', group_name)
         self.root = self.world.root_link_name
         self.goal_point = self.transform_msg(self.world.root_link_name, goal_point)
         self.goal_point.point.z = 0
@@ -122,13 +122,13 @@ class KeepHandInWorkspace(Goal):
         super().__init__()
         if base_footprint is None:
             base_footprint = 'base_footprint'
-        base_footprint = self.world.get_link_name(base_footprint, group_name)
+        base_footprint = self.world.search_for_link_name(base_footprint, group_name)
         if map_frame is None:
             map_frame = self.world.root_link_name
         self.weight = weight
         self.max_velocity = max_velocity
         self.map_frame = map_frame
-        self.tip_link = self.world.get_link_name(tip_link, group_name)
+        self.tip_link = self.world.search_for_link_name(tip_link, group_name)
         self.base_footprint = base_footprint
 
         if pointing_axis is not None:
@@ -145,17 +145,17 @@ class KeepHandInWorkspace(Goal):
         map_T_base_footprint = self.get_fk(self.map_frame, self.base_footprint)
         map_V_pointing_axis = w.dot(map_T_base_footprint, base_footprint_V_pointing_axis)
         map_T_tip = self.get_fk(self.map_frame, self.tip_link)
-        map_V_tip = map_T_tip.to_position()
-        map_V_tip[2] = 0
-        map_V_tip[3] = 0
+        map_V_tip = w.Vector3(map_T_tip.to_position())
+        map_V_tip.y = 0
+        map_V_tip.z = 0
         map_P_tip = map_T_tip.to_position()
-        map_P_tip[2] = 0
+        map_P_tip.z = 0
         map_P_base_footprint = map_T_base_footprint.to_position()
-        map_P_base_footprint[2] = 0
+        map_P_base_footprint.z = 0
         base_footprint_V_tip = map_P_tip - map_P_base_footprint
-        distance_to_base = w.norm(base_footprint_V_tip)
+        # distance_to_base = w.norm(base_footprint_V_tip)
 
-        map_V_tip = w.scale(map_V_tip, 1)
+        map_V_tip.scale(1)
         angle_error = w.angle_between_vector(base_footprint_V_tip, map_V_pointing_axis)
         # self.add_debug_expr('rot', angle_error)
         self.add_constraint(reference_velocity=0.5,

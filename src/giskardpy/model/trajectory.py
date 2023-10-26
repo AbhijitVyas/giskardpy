@@ -1,15 +1,18 @@
-from collections import OrderedDict
-from typing import List, Union
+from __future__ import annotations
+from collections import OrderedDict, defaultdict
+from typing import List, Union, Dict
 
 import rospy
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 from giskardpy.data_types import JointStates
-from giskardpy.model.joints import Joint, OmniDrive
+from giskardpy.model.joints import Joint, OmniDrive, MovableJoint
 from giskardpy.my_types import PrefixName
 
 
 class Trajectory:
+    _points: Dict[int, JointStates]
+
     def __init__(self):
         self.clear()
 
@@ -19,12 +22,12 @@ class Trajectory:
     def get_exact(self, time):
         return self._points[time]
 
-    def set(self, time, point: JointStates):
+    def set(self, time: int, point: JointStates):
         if len(self._points) > 0 and list(self._points.keys())[-1] > time:
             raise KeyError('Cannot append a trajectory point that is before the current end time of the trajectory.')
         self._points[time] = point
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._points)
 
     def get_joint_names(self):
@@ -50,7 +53,7 @@ class Trajectory:
     def values(self):
         return self._points.values()
 
-    def to_msg(self, sample_period: float, start_time: Union[rospy.Duration, float], joints: List[Joint],
+    def to_msg(self, sample_period: float, start_time: Union[rospy.Duration, float], joints: List[MovableJoint],
                fill_velocity_values: bool = True) -> JointTrajectory:
         if isinstance(start_time, (int, float)):
             start_time = rospy.Duration(start_time)
@@ -61,10 +64,7 @@ class Trajectory:
             p = JointTrajectoryPoint()
             p.time_from_start = rospy.Duration(time * sample_period)
             for joint in joints:
-                if isinstance(joint, OmniDrive):
-                    free_variables = joint.position_variable_names
-                else:
-                    free_variables = [v.name for v in joint.free_variable_list]
+                free_variables = joint.get_position_variables()
                 for free_variable in free_variables:
                     if free_variable in traj_point:
                         if i == 0:
