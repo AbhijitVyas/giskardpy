@@ -91,7 +91,7 @@ def move_forward():
     base_goal.header.frame_id = 'base_footprint'
     base_goal.pose.position.x += 1
     rospy.loginfo('Setting Cartesian goal.')
-    giskard_wrapper.set_cart_goal(root_link='map', tip_link='base_footprint', goal_pose=base_goal)
+    giskard_wrapper.set_cart_goal(goal_pose=base_goal, root_link='map', tip_link='base_footprint')
     # Turn off collision avoidance to make sure that the robot can recover from any state.
     giskard_wrapper.allow_all_collisions()
     return giskard_wrapper.plan_and_execute()
